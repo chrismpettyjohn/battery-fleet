@@ -1,63 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="viewport" content="width=device-width, initial-scale=1">
     <title>Battery Fleet Simulation</title>
     <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+    </style>
 </head>
-<body class="bg-light">
-    <div class="container my-5">
-        <h1 class="text-center">Battery Fleet Simulation Dashboard</h1>
+<body>
 
-        <!-- Card for Plot -->
-        <div class="card mb-4">
-            <div class="card-header">
-                <h2 class="h4">Energy Prices Over 24 Hours</h2>
-            </div>
-            <div class="card-body text-center">
-                <img src="data:image/png;base64,{{ plot_url }}" alt="Energy Prices" class="img-fluid">
-            </div>
+<div class="container my-5">
+    <!-- Main title -->
+    <h1 class="text-center mb-5">Battery Fleet Simulation Dashboard</h1>
+
+    <!-- Card for Energy Prices Plot -->
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h4>Energy Prices Over 24 Hours</h4>
         </div>
-
-        <!-- Batteries Information -->
-        <div class="card mb-4">
-            <div class="card-header">
-                <h2 class="h4">Batteries</h2>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <!-- Loop through the batteries list and display each battery's attributes -->
-                    {% for battery in batteries %}
-                    <div class="col-md-4 mb-3">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5 class="card-title">Battery {{ loop.index }}</h5>
-                            </div>
-                            <div class="card-body">
-                                <p class="card-text"><strong>Capacity:</strong> {{ battery.capacity }} MWh</p>
-                                <p class="card-text"><strong>Charge Rate:</strong> {{ battery.charge_rate }} MW</p>
-                                <p class="card-text"><strong>Discharge Rate:</strong> {{ battery.discharge_rate }} MW</p>
-                                <p class="card-text"><strong>Efficiency:</strong> {{ battery.efficiency * 100 }}%</p>
-                                <p class="card-text"><strong>Final Energy Level:</strong> {{ battery.energy_level }} MWh</p>
-                            </div>
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
-            </div>
-        </div>
-
-        <!-- Total Revenue -->
-        <div class="card">
-            <div class="card-body text-center">
-                <h3>Total Revenue: <span class="text-success">${{ fleet.revenue }}</span></h3>
-            </div>
+        <div class="card-body text-center">
+            <img src="data:image/png;base64,{{ plot_url }}" alt="Energy Prices" class="img-fluid">
         </div>
     </div>
 
-    <!-- Bootstrap JS and dependencies (optional for interactive components) -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Batteries Accordion -->
+    <div class="accordion mb-4" id="batteriesAccordion">
+        <div class="card">
+            <div class="card-header bg-secondary text-white" id="headingBatteries">
+                <h4 class="mb-0">Batteries Overview</h4>
+            </div>
+        </div>
+
+        {% for battery in batteries %}
+        <div class="card">
+            <div class="card-header" id="headingBattery{{ loop.index }}">
+                <h5 class="mb-0">
+                    <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseBattery{{ loop.index }}" aria-expanded="true" aria-controls="collapseBattery{{ loop.index }}">
+                        Battery {{ loop.index }}
+                    </button>
+                </h5>
+            </div>
+
+            <div id="collapseBattery{{ loop.index }}" class="collapse {% if loop.first %}show{% endif %}" aria-labelledby="headingBattery{{ loop.index }}" data-parent="#batteriesAccordion">
+                <div class="card-body">
+                    <ul class="list-group">
+                        <li class="list-group-item"><strong>Capacity:</strong> {{ battery.capacity }} MWh</li>
+                        <li class="list-group-item"><strong>Charge Rate:</strong> {{ battery.charge_rate }} MW</li>
+                        <li class="list-group-item"><strong>Discharge Rate:</strong> {{ battery.discharge_rate }} MW</li>
+                        <li class="list-group-item"><strong>Efficiency:</strong> {{ battery.efficiency * 100 }}%</li>
+                        <li class="list-group-item"><strong>Final Energy Level:</strong> {{ battery.energy_level }} MWh</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Total Revenue -->
+    <div class="card text-center">
+        <div class="card-body">
+            <h3>Total Revenue: <span class="text-success">${{ fleet.revenue | round(2, 'floor') }}</span></h3>
+        </div>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
 </body>
 </html>
