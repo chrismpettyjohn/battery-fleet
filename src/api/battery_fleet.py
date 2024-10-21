@@ -17,8 +17,9 @@ class BatteryFleet:
         for battery in self.batteries:
             if available_charge <= 0:
                 break
+            max_possible_charge = min(battery.charge_rate * hours, battery.capacity - battery.energy_level)
             revenue_change = battery.charge(price, hours)
-            available_charge -= battery.charge_rate * hours
+            available_charge -= max_possible_charge
             self.revenue += revenue_change
 
     def discharge(self, price, hours):
@@ -26,6 +27,7 @@ class BatteryFleet:
         for battery in self.batteries:
             if available_discharge <= 0:
                 break
+            max_possible_discharge = min(battery.discharge_rate * hours, battery.energy_level)
             revenue_change = battery.discharge(price, hours)
-            available_discharge -= battery.discharge_rate * hours
+            available_discharge -= max_possible_discharge
             self.revenue += revenue_change
