@@ -7,17 +7,16 @@ class Battery:
         self.energy_level = 0
         self.profit = 0
 
-    def charge(self, price, hours):
-        max_possible_charge = min(self.charge_rate * hours * self.efficiency, self.capacity - self.energy_level)
-        self.energy_level += max_possible_charge
-        self.profit += max_possible_charge * -price  # Update profit for charging
-        return max_possible_charge * -price
+    def charge(self, price, amount):
+        actual_charge = min(amount, self.capacity - self.energy_level)
+        cost = actual_charge * price
+        self.energy_level += actual_charge
+        self.profit -= cost
+        return -cost
 
-    def discharge(self, price, hours):
-        max_possible_discharge = min(self.discharge_rate * hours, self.energy_level)
-        self.energy_level -= max_possible_discharge
-        self.profit += max_possible_discharge * price  # Update profit for discharging
-        return max_possible_discharge * price
-
-    def calculate_profit(self):
-        return self.profit  # Return the current profit
+    def discharge(self, price, amount):
+        actual_discharge = min(amount, self.energy_level)
+        revenue = actual_discharge * price * self.efficiency
+        self.energy_level -= actual_discharge
+        self.profit += revenue
+        return revenue

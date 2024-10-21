@@ -45,15 +45,17 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for battery in batteries %}
+                        {% for battery in batteries | sort(attribute='profit', reverse=true) %}
                         <tr>
-                            <td>Battery {{ loop.index }}</td>
+                            <td>Battery {{ battery.original_index }}</td>
                             <td>{{ battery.capacity | round(2) }}</td>
                             <td>{{ battery.charge_rate | round(2) }}</td>
                             <td>{{ battery.discharge_rate | round(2) }}</td>
                             <td>{{ (battery.efficiency * 100) | round(2) }}</td>
                             <td>{{ battery.energy_level | round(2) }}</td>
-                            <td>${{ battery.profit | round(2) }}</td>
+                            <td style="color: {% if battery.profit >= 0 %}darkgreen{% else %}darkred{% endif %};">
+                                $<span class="profit">{{ battery.profit | round(2) }}</span>
+                            </td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -65,12 +67,21 @@
     <!-- Total Revenue -->
     <div class="card text-center">
         <div class="card-body">
-            <h3>Total Revenue: <span class="text-success">${{ fleet.revenue | round(2, 'floor') }}</span></h3>
+            <h3>Total Revenue: $<span class="text-success profit">{{ fleet.revenue | round(2) }}</span></h3>
         </div>
     </div>
 </div>
 
 <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
 <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var profitElements = document.querySelectorAll('.profit');
+    profitElements.forEach(function(element) {
+        var number = parseFloat(element.textContent);
+        element.textContent = number.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+    });
+});
+</script>
 </body>
 </html>
