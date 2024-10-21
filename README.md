@@ -1,4 +1,4 @@
-# Battery Fleet Simulation
+_# Battery Fleet Simulation_
 
 This project simulates the operation of a battery fleet interacting with fluctuating energy prices to maximize total revenue. It includes both the simulation logic (`api.py`) and a simple dashboard (`site.py`) for monitoring performance via a web interface.
 
