@@ -3,11 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Battery Fleet Dashboard</title>
+    <title>Battery Fleet Simulation</title>
 </head>
 <body>
     <h1>Battery Fleet Simulation Dashboard</h1>
+
     <img src="data:image/png;base64,{{ plot_url }}" alt="Energy Prices">
+
+    <h2>Batteries</h2>
+    <ul>
+    {% for battery in batteries %}
+        <li>Battery {{ loop.index }}:
+            <ul>
+                <li>Capacity: {{ battery.capacity }} MWh</li>
+                <li>Charge rate: {{ battery.charge_rate }} MW</li>
+                <li>Discharge rate: {{ battery.discharge_rate }} MW</li>
+                <li>Efficiency: {{ battery.efficiency * 100 }}%</li>
+                <li>Final energy level: {{ battery.energy_level }} MWh</li>
+            </ul>
+        </li>
+    {% endfor %}
+    </ul>
+
+    <h2>Total Revenue: {{ fleet.revenue }}</h2>
 </body>
 </html>
-

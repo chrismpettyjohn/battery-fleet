@@ -3,13 +3,14 @@ import matplotlib.pyplot as plt
 import io
 import base64
 
-from src.sim.simulate_prices import simulate_prices
+from src.sim.run import run_simulation
 
 app = Flask(__name__)
 
 @app.route('/')
 def dashboard():
-    prices = simulate_prices(24)
+    fleet, prices, batteries = run_simulation()
+
     img = io.BytesIO()
 
     # Plot energy prices
@@ -22,7 +23,8 @@ def dashboard():
     img.seek(0)
     plot_url = base64.b64encode(img.getvalue()).decode('utf8')
 
-    return render_template('dashboard.html', plot_url=plot_url)
+    return render_template('dashboard.html', plot_url=plot_url, fleet=fleet, batteries=batteries)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
