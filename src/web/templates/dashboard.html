@@ -26,32 +26,23 @@
         </div>
     </div>
 
-    <!-- Batteries Accordion -->
-    <div class="accordion mb-4" id="batteriesAccordion">
-        <div class="card">
-            <div class="card-header bg-secondary text-white" id="headingBatteries">
-                <h4 class="mb-0">Batteries Overview</h4>
-            </div>
-        </div>
-
+    <!-- Batteries Grid (Rows of 4 cards) -->
+    <div class="row">
         {% for battery in batteries %}
-        <div class="card">
-            <div class="card-header" id="headingBattery{{ loop.index }}">
-                <h5 class="mb-0">
-                    <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseBattery{{ loop.index }}" aria-expanded="true" aria-controls="collapseBattery{{ loop.index }}">
-                        Battery {{ loop.index }}
-                    </button>
-                </h5>
-            </div>
+        <div class="col-md-3 mb-4">
+            <div class="card">
+                <div class="card-header bg-secondary text-white">
+                    <h5 class="mb-0">Battery {{ loop.index }}</h5>
+                </div>
 
-            <div id="collapseBattery{{ loop.index }}" class="collapse {% if loop.first %}show{% endif %}" aria-labelledby="headingBattery{{ loop.index }}" data-parent="#batteriesAccordion">
                 <div class="card-body">
                     <ul class="list-group">
-                        <li class="list-group-item"><strong>Capacity:</strong> {{ battery.capacity }} MWh</li>
-                        <li class="list-group-item"><strong>Charge Rate:</strong> {{ battery.charge_rate }} MW</li>
-                        <li class="list-group-item"><strong>Discharge Rate:</strong> {{ battery.discharge_rate }} MW</li>
-                        <li class="list-group-item"><strong>Efficiency:</strong> {{ battery.efficiency * 100 }}%</li>
-                        <li class="list-group-item"><strong>Final Energy Level:</strong> {{ battery.energy_level }} MWh</li>
+                        <li class="list-group-item"><strong>Capacity:</strong> {{ battery.capacity | round(2) }} MWh</li>
+                        <li class="list-group-item"><strong>Charge Rate:</strong> {{ battery.charge_rate | round(2) }} MW</li>
+                        <li class="list-group-item"><strong>Discharge Rate:</strong> {{ battery.discharge_rate | round(2) }} MW</li>
+                        <li class="list-group-item"><strong>Efficiency:</strong> {{ (battery.efficiency * 100) | round(2) }}%</li>
+                        <li class="list-group-item"><strong>Final Energy Level:</strong> {{ battery.energy_level | round(2) }} MWh</li>
+                        <li class="list-group-item"><strong>Profit:</strong> ${{ battery.profit | round(2) }}</li>
                     </ul>
                 </div>
             </div>
